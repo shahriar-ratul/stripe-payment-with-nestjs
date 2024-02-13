@@ -1,6 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnprocessableEntityException } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
 import { Prisma, Product } from '@prisma/client';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@/common/dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -67,19 +66,48 @@ export class ProductService {
   }
 
 
-  create(createProductDto: CreateProductDto) {
-    return 'This action adds a new product';
+  async create(createProductDto: CreateProductDto) {
+
+    // check price and stock is number and greater than 0
+    const price = Number(createProductDto.price);
+
+    const stock = Number(createProductDto.stock);
+
+    if (isNaN(price)) {
+      throw new UnprocessableEntityException('Price must be a number');
+    }
+
+    if (price < 0) {
+      throw new UnprocessableEntityException('Price cannot be negative');
+    }
+
+    if (isNaN(stock)) {
+      throw new UnprocessableEntityException('Stock must be a number');
+    }
+
+    if (stock < 0) {
+      throw new UnprocessableEntityException('Stock cannot be negative');
+    }
+
+
+
+    const item: Product = await this._prisma.product.create({
+      data: {
+        name: createProductDto.name,
+        price: price,
+        stock: stock,
+        description: createProductDto.description,
+      }
+    });
+
+    return {
+      message: 'Product created successfully',
+      item,
+    };
+
+
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
-  }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    return `This action updates a #${id} product`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} product`;
-  }
 }

@@ -20,6 +20,7 @@ model Product {
   stock       Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  
   orders OrderItems[]
 }
 
@@ -27,13 +28,14 @@ model Product {
 
 model Order{
   id        Int      @id @default(autoincrement())
-  paymentId Int?
   total    Float
+  totalQty Int
   status   OrderStatus
   paymentStatus PaymentStatus
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
+  payments Payment[]
   items OrderItems[]
 }
 
@@ -45,27 +47,22 @@ model OrderItems{
   quantity  Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Order     Order    @relation(fields: [orderId], references: [id])
-  Product   Product  @relation(fields: [productId], references: [id])
+
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 
 }
 
 model Payment {
   id        Int      @id @default(autoincrement())
   orderId   Int
-  
   amount    Float
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Order     Order    @relation(fields: [orderId], references: [id])
 
 }
 
-model Transaction {
-  id        Int      @id @default(autoincrement())
-  amount    Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
 
 enum PaymentStatus {

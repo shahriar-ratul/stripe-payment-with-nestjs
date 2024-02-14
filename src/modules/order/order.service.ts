@@ -72,7 +72,6 @@ export class OrderService {
       }
     })
 
-    console.log(items);
 
     const productsIds = items.map(item => item.productId);
 

@@ -60,7 +60,7 @@ model Payment {
   status    PaymentStatus
   paymentType String?
   paymentDate DateTime?
-  paymentId String?
+  paymentId String @unique
   currency String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

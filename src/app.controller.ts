@@ -15,13 +15,4 @@ export class AppController {
     return this.appService.getHello();
   }
 
-  @Get('/success')
-  async getSuccess() {
-    return await this._stripeService.getSuccess();
-  }
-
-  @Get('/cancel')
-  async getCancel() {
-    return await this._stripeService.getCancel();
-  }
 }

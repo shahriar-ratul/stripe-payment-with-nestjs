@@ -72,9 +72,6 @@ export class StripeService {
 
 
     async getSuccess() {
-        console.log();
-
-
         return 'Payment was successful';
     }
 

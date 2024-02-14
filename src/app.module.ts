@@ -9,6 +9,7 @@ import { join } from 'path';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ProductModule } from './modules/product/product.module';
 import { OrderModule } from './modules/order/order.module';
+import { StripeModule } from './modules/stripe/stripe.module';
 @Module({
   imports: [
     PrismaModule,
@@ -33,6 +34,7 @@ import { OrderModule } from './modules/order/order.module';
     }]),
     ProductModule,
     OrderModule,
+    StripeModule,
 
 
   ],

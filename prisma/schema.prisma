@@ -57,9 +57,14 @@ model Payment {
   id        Int      @id @default(autoincrement())
   orderId   Int
   amount    Float
+  status    PaymentStatus
+  paymentType String?
+  paymentDate DateTime?
+  paymentId String?
+  currency String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Order     Order    @relation(fields: [orderId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id])
 
 }
 

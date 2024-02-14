@@ -19,7 +19,7 @@ export class OrderController {
 
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto) {
-    return this._orderService.create(createOrderDto);
+    return await this._orderService.create(createOrderDto);
   }
 
   @Get(':id')

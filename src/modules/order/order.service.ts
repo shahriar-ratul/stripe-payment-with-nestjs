@@ -3,12 +3,14 @@ import { CreateOrderDto, OrderItems } from './dto/create-order.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@/common/dto';
 import { Order, OrderStatus, PaymentStatus, Prisma } from '@prisma/client';
+import { StripeService } from '../stripe/stripe.service';
 
 @Injectable()
 export class OrderService {
 
   constructor(
     private readonly _prisma: PrismaService,
+    private readonly _paymentService: StripeService,
   ) { }
 
   async findAll(query: PageOptionsDto): Promise<PageDto<Order>> {
@@ -58,10 +60,6 @@ export class OrderService {
 
 
   async create(createOrderDto: CreateOrderDto) {
-
-
-    console.log(createOrderDto);
-
     if (createOrderDto.items.length < 0) {
       throw new UnprocessableEntityException('The items of the Order are required');
     }
@@ -124,18 +122,25 @@ export class OrderService {
     });
 
 
-    const orderWithItems = await this._prisma.order.findUnique({
-      where: {
-        id: order.id
-      },
-      include: {
-        items: true
-      }
-    });
+    // const orderWithItems = await this._prisma.order.findUnique({
+    //   where: {
+    //     id: order.id
+    //   },
+    //   include: {
+    //     items: true
+    //   }
+    // });
 
+    const url = await this._paymentService.createCheckoutSession(items.map(item => {
+      return {
+        id: item.productId,
+        quantity: item.quantity
+      }
+    }), order);
 
     return {
-      order: orderWithItems,
+      // order: orderWithItems,
+      paymentUrl: url,
       message: 'Order created successfully'
     };
   }

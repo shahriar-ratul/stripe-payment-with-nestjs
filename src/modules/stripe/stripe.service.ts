@@ -1,7 +1,7 @@
 import { Injectable, Logger, ParseIntPipe, Query, RawBodyRequest, Req } from '@nestjs/common';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
-import { Order, PaymentStatus } from '@prisma/client';
+import { Order, OrderStatus, PaymentStatus } from '@prisma/client';
 
 
 @Injectable()
@@ -134,7 +134,19 @@ export class StripeService {
                     },
                 });
 
-                console.log(payment);
+                await this._prisma.order.update({
+                    where: {
+                        id: payment.orderId,
+                    },
+                    data: {
+                        status: OrderStatus.COMPLETED,
+                        paymentStatus: PaymentStatus.PAID,
+                    },
+                });
+
+
+
+                // console.log(payment);
 
 
 

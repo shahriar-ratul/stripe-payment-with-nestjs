@@ -138,7 +138,7 @@ export class OrderService {
     }), order);
 
     return {
-      // order: orderWithItems,
+      order: order,
       paymentUrl: url,
       message: 'Order created successfully'
     };
@@ -159,7 +159,8 @@ export class OrderService {
           include: {
             product: true
           }
-        }
+        },
+        payments: true
       }
     });
 

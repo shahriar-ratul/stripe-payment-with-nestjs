@@ -45,4 +45,17 @@ describe('AppController (e2e)', () => {
 
             });
     });
+
+    it('/orders/:id (GET)', async () => {
+        return request(app.getHttpServer())
+            .get('/orders/2')
+            .expect(200)
+            .expect('Content-Type', /json/)
+            .then(response => {
+                expect(response.body).toBeDefined();
+                expect(response.body.item).toBeDefined();
+            });
+    });
+
+
 });

@@ -52,6 +52,10 @@ class mockProductService {
       throw new UnprocessableEntityException('Price cannot be negative');
     }
 
+    if (data.stock < 0) {
+      throw new UnprocessableEntityException('Stock cannot be negative');
+    }
+
 
 
     return {
@@ -77,12 +81,6 @@ class mockProductService {
 describe('ProductService', () => {
   let service: ProductService;
 
-  const mockPrismaService = {
-    product: {
-      findMany: jest.fn(),
-      count: jest.fn(),
-    },
-  };
 
   const PageDto = {
     limit: 10,
@@ -184,18 +182,20 @@ describe('ProductService', () => {
         }),
       });
     });
+    it('should throw UnprocessableEntityException if price is negative', async () => {
+      await expect(
+        service.create({ name: 'Test Product', price: -100, stock: 10, description: 'Test Description' }),
+      ).rejects.toThrow(UnprocessableEntityException);
+    });
+
+    it('should throw UnprocessableEntityException if stock is negative', async () => {
+      await expect(
+        service.create({ name: 'Test Product', price: 100, stock: -10, description: 'Test Description' }),
+      ).rejects.toThrow(UnprocessableEntityException);
+    });
+
+
   });
-
-
-  it('should throw UnprocessableEntityException if price is negative', async () => {
-    await expect(
-      service.create({ name: 'Test Product', price: -100, stock: 10, description: 'Test Description' }),
-    ).rejects.toThrow(UnprocessableEntityException);
-  });
-
-
-
-
 
 
 });
